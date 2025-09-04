@@ -123,7 +123,6 @@ router.get("/events/:userId", async (req, res) => {
   }
 });
 
-// Add event to Google Calendar
 router.post("/add-to-google-calendar/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
@@ -162,7 +161,6 @@ router.post("/add-to-google-calendar/:userId", async (req, res) => {
   }
 });
 
-// Update event in Google Calendar
 router.put("/update-event/:eventId/:userId", async (req, res) => {
   try {
     const { eventId, userId } = req.params;
@@ -221,7 +219,6 @@ router.put("/update-event/:eventId/:userId", async (req, res) => {
   }
 });
 
-// Delete event from Google Calendar
 router.delete("/delete-event/:eventId/:userId", async (req, res) => {
   try {
     const { eventId, userId } = req.params;

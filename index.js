@@ -19,7 +19,11 @@ app.use(helmet());
 // CORS configuration
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: [
+      process.env.FRONTEND_URL || "http://localhost:3000",
+      "https://law-bandit-front.vercel.app",
+      "https://law-bandit-front-git-main-mergenoos-projects.vercel.app",
+    ],
     credentials: true,
   })
 );
