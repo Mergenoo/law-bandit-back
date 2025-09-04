@@ -169,24 +169,22 @@ async function syncEventsToDatabaseFromDatabase(
   // Store events in local database
   const eventsToInsert = events.map((event) => ({
     user_id: userId,
-    google_event_id: event.id,
-    calendar_id: calendarId,
+    class_id: null, // Google Calendar events don't have a specific class
     title: event.summary || "Untitled Event",
     description: event.description || "",
-    location: event.location || "",
-    start_time: event.start.dateTime || event.start.date,
-    end_time: event.end.dateTime || event.end.date,
-    html_link: event.htmlLink,
-    created_at: event.created,
-    updated_at: event.updated,
-    status: event.status,
+    event_type: "google_calendar", // Mark as Google Calendar event
+    due_date: event.start.dateTime ? new Date(event.start.dateTime).toISOString().split('T')[0] : event.start.date,
+    due_time: event.start.dateTime ? new Date(event.start.dateTime).toISOString().split('T')[1].substring(0, 5) : null,
+    confidence_score: 1.0, // High confidence for Google Calendar events
+    source_text: `Google Calendar Event: ${event.summary}`,
+    created_at: new Date().toISOString(),
   }));
 
   // Upsert events to avoid duplicates
   const { error: insertError } = await supabase
-    .from("google_calendar_events")
+    .from("calendar_events")
     .upsert(eventsToInsert, {
-      onConflict: "user_id,google_event_id",
+      onConflict: "user_id,title,due_date",
     });
 
   if (insertError) {
