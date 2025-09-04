@@ -28,7 +28,7 @@ async function getUserTokensFromDatabase(userId) {
   const { data: tokenData, error: tokenError } = await supabase
     .from("google_calendar_tokens")
     .select("*")
-    .eq("id", userId)
+    .eq("user_id", userId)
     .single();
 
   if (tokenError || !tokenData) {
@@ -47,7 +47,7 @@ async function getUserTokensFromDatabase(userId) {
     access_token: tokenData.access_token,
     refresh_token: tokenData.refresh_token,
     expiry_date: tokenData.expiry_date,
-    user_id: tokenData.id,
+    user_id: tokenData.user_id,
   };
 }
 
@@ -73,7 +73,7 @@ async function refreshUserTokensFromDatabase(userId, refreshToken) {
         ? new Date(credentials.expiry_date).toISOString()
         : null,
     })
-    .eq("id", userId);
+    .eq("user_id", userId);
 
   if (updateError) {
     throw new Error(
@@ -216,7 +216,7 @@ async function getUserConnectionStatusFromDatabase(userId) {
     const { data: tokenData, error: tokenError } = await supabase
       .from("google_calendar_tokens")
       .select("*")
-      .eq("id", userId)
+      .eq("user_id", userId)
       .single();
 
     if (tokenError || !tokenData) {
