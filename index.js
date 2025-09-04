@@ -9,6 +9,7 @@ const rateLimit = require("express-rate-limit");
 // Import routes
 const authRoutes = require("./routes/auth");
 const googleCalendarRoutes = require("./routes/googleCalendar");
+const calendarRoutes = require("./routes/calendar");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -53,6 +54,7 @@ app.get("/health", (req, res) => {
 // API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/google-calendar", googleCalendarRoutes);
+app.use("/api/calendar", calendarRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
