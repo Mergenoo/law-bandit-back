@@ -173,19 +173,24 @@ async function syncEventsToDatabaseFromDatabase(
     title: event.summary || "Untitled Event",
     description: event.description || "",
     event_type: "google_calendar", // Mark as Google Calendar event
-    due_date: event.start.dateTime ? new Date(event.start.dateTime).toISOString().split('T')[0] : event.start.date,
-    due_time: event.start.dateTime ? new Date(event.start.dateTime).toISOString().split('T')[1].substring(0, 5) : null,
+    due_date: event.start.dateTime
+      ? new Date(event.start.dateTime).toISOString().split("T")[0]
+      : event.start.date,
+    due_time: event.start.dateTime
+      ? new Date(event.start.dateTime)
+          .toISOString()
+          .split("T")[1]
+          .substring(0, 5)
+      : null,
     confidence_score: 1.0, // High confidence for Google Calendar events
     source_text: `Google Calendar Event: ${event.summary}`,
     created_at: new Date().toISOString(),
   }));
 
-  // Upsert events to avoid duplicates
+  // Insert events to calendar_events table
   const { error: insertError } = await supabase
     .from("calendar_events")
-    .upsert(eventsToInsert, {
-      onConflict: "user_id,title,due_date",
-    });
+    .insert(eventsToInsert);
 
   if (insertError) {
     throw new Error(
