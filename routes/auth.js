@@ -10,11 +10,18 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-// Initialize Google OAuth2 client
+// Initialize Google OAuth2 client with dynamic redirect URI
+const getRedirectUri = () => {
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://law-bandit-front.vercel.app/auth/google/callback';
+  }
+  return process.env.GOOGLE_REDIRECT_URI || 'http://localhost:3000/auth/google/callback';
+};
+
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
-  process.env.GOOGLE_REDIRECT_URI
+  getRedirectUri()
 );
 
 // Test Supabase connection
